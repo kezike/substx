@@ -1,4 +1,4 @@
-# stx-test-cli
+# substx
 
 ## Project setup
 ```
