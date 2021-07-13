@@ -17,7 +17,7 @@
             <td></td>
             <td></td>
             <td>
-              <h2><button @click="logout">Logout</button></h2>
+              <button @click="logout"><strong>Logout</strong></button>
             </td>
           </tr>
         </tbody>
@@ -33,20 +33,27 @@
         <tbody>
           <tr>
             <td>
-              <button class="button">
-                <img src="https://cdn4.iconfinder.com/data/icons/files-13/100/circle-things-12-32.png">
+              <button class="button" @click="$router.push('/content/new')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
                 <strong class="button-text">New</strong>
               </button>
             </td>
             <td>
               <button class="button">
-                <img src="https://cdn4.iconfinder.com/data/icons/files-13/100/circle-things-36-32.png">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
                 <strong class="button-text">Edit</strong>
               </button>
             </td>
             <td>
               <button class="button">
-                <img src="https://cdn0.iconfinder.com/data/icons/ui-kit-elements/16/Share-32.png">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
+                  <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
+                </svg>
                 <strong class="button-text">Share</strong>
               </button>
             </td>
@@ -64,12 +71,13 @@
 </template>
 
 <script>
-  import { ref, defineProps } from 'vue'
-  import { authenticate, userSession } from '../services/auth.ts'
+  import { ref, defineProps } from 'vue';
+  import { authenticate, userSession } from '../services/auth';
 
   export default {
     name: 'Home',
     props: ['greeting'],
+    
     data() {
       return {
         userSession,
@@ -116,14 +124,6 @@
       }
     }
   }
-
-  // const login = () => {
-  //   authenticate();
-  // };
-
-  // defineProps({
-  //   greeting: String
-  // });
 </script>
 
 <style scoped>

@@ -1,8 +1,8 @@
 {
   "name": "substx",
   "version": "0.1.0",
-  "description": "Decentralized newsletter service built on Stacks platform",
   "private": true,
+  "description": "Decentralized newsletter service built on Stacks platform",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,17 +10,20 @@
   },
   "dependencies": {
     "@stacks/connect": "^6.0.0",
-    "core-js": "^3.15.1",
-    "vue": "^3.1.2"
+    "core-js": "^3.15.2",
+    "vue": "^3.1.4",
+    "vue-router": "^4.0.10",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-eslint": "^4.5.13",
+    "@vue/cli-plugin-router": "^4.5.13",
     "@vue/cli-service": "^4.5.13",
-    "@vue/compiler-sfc": "^3.1.2",
+    "@vue/compiler-sfc": "^3.1.4",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^7.12.1",
+    "eslint-plugin-vue": "^7.13.0",
     "vue-loader-v16": "^16.0.0-beta.5.4"
   }
 }
