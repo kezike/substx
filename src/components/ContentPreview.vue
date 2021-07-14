@@ -21,6 +21,7 @@
     color: #2c3e50;
     margin-top: 60px;
   }
+  
   .preview {
     border-style: solid;
     border-width: 2px;
