@@ -45,6 +45,19 @@
           <path d="M2 3h10v2H2V3zm0 3h4v3H2V6zm0 4h4v1H2v-1zm0 2h4v1H2v-1zm5-6h2v1H7V6zm3 0h2v1h-2V6zM7 8h2v1H7V8zm3 0h2v1h-2V8zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1z"/>
         </svg>
         <strong style="font-size: 22px;">&nbsp;&nbsp;Content</strong><br><br>
+        <button class="button create-content" @click="createContent()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+          </svg>
+          <span style="font-size: 16px;">&nbsp;&nbsp;Create&nbsp;&nbsp;</span>
+        </button>&nbsp;&nbsp;
+        <button class="button clear-content" @click="clearContent()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+          </svg>
+          <span style="font-size: 16px;">&nbsp;&nbsp;Clear&nbsp;&nbsp;</span>
+        </button><br><br>
         <table cellpadding="10" v-if="hasContent">
           <thead align="center">
             <tr>
@@ -57,7 +70,7 @@
               <td>{{ item.title }}</td>
               <td>{{ item.date }}</td>
               <td>
-                <button class="button">
+                <button class="button" @click="viewContent(item.id)">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                     <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
@@ -80,7 +93,7 @@
           <div class="empty-table">
             <br>
             <p>No stored content available</p>
-            <button class="button" @click="$router.push('/content/new')">
+            <button class="button create-content-lone" @click="createContent()">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                 <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
               </svg>
@@ -106,7 +119,7 @@
     getSessionData,
     hasContent,
     listContent,
-    deleteData,
+    clearContent,
   } from '../services/stacks';
 
   export default {
@@ -123,7 +136,6 @@
 
     async mounted() {
       await this.updateContent();
-      this.isLoading = false;
     },
 
     methods: {
@@ -135,12 +147,27 @@
         logout();
       },
 
+      async createContent() {
+        this.$router.push('/content/new');
+      },
+
+      async viewContent(id) {
+        this.$router.push(`/content/${id}`);
+      },
+
       async updateContent() {
+        this.isLoading = true;
         const hasCont = await hasContent();
         this.hasContent = hasCont;
         if (hasCont) {
           await listContent(this.content);
         }
+        this.isLoading = false;
+      },
+
+      async clearContent() {
+        await clearContent(this.content);
+        await this.updateContent();
       }
     },
 
@@ -189,6 +216,10 @@
   .button { width: 100px; }
 
   .button .button-text { font-size: 18px; }
+
+  .create-content-lone { width: 50px; }
+
+  .create-content .clear-content { width: 100px; }
 
   code {
     background-color: #eee;

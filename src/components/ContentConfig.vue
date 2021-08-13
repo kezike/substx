@@ -4,25 +4,25 @@
 </template>
 
 <script>
+  import { fetchContent } from '../services/stacks';
+
   export default {
     name: 'ContentConfig',
-    // emits: ['updateHtml'],
+
+    async mounted() {
+      const contentId = this.$route.params.id;
+      const content = (await fetchContent(contentId)).content;
+      this.content = content;
+    },
 
     data() {
       return {
         content: ''
       };
     },
-    // methods: {
-    //   updateHtml() {
-    //     const rawHtml = this.$refs.content.value;
-    //     this.$emit('updateHtml', rawHtml);
-    //   }
-    // },
+
     watch: {
       content(newContent) {
-        // console.log("new content:", newContent);
-        // console.log("store", this.$store);
         this.$store.commit("saveContent", newContent);
       }
     }

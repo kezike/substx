@@ -43,9 +43,14 @@ const persistData = async (file, data, options = {}) => {
   await storage.putFile(file, JSON.stringify(data), options);
 };
 
+export const generateContentId = () => {
+  return uuidv4();
+};
+
 // Persist user-generated content to Gaia hub
-export const persistContent = async (data, slug = uuidv4(), options = {}) => {
-  await persistData(`substx/content/${slug}.json`, data, options);
+export const persistContent = async (data, slug = generateContentId(), options = {}) => {
+  const contentId = data.id ? data.id : slug;
+  await persistData(`substx/content/${contentId}.json`, { ...data, id: contentId }, options);
 };
 
 // Fetch data from Gaia hub
@@ -60,8 +65,8 @@ const fetchData = async (file, options = {}) => {
 };
 
 // Fetch single user-generated content item from Gaia hub
-export const fetchContent = async (options = {}) => {
-  const data = await fetchData('substx/content', options);
+export const fetchContent = async (slug, options = {}) => {
+  const data = await fetchData(`substx/content/${slug}.json`, options);
   return data;
 };
 
@@ -92,6 +97,13 @@ export const hasContent = async (data = []) => {
 };
 
 // Delete user-generated data
-export const deleteData = async (file) => {
-  await storage.deleteFile(file);
+export const deleteContent = async (slug) => {
+  await storage.deleteFile(`substx/content/${slug}.json`);
+};
+
+// Delete user-generated data
+export const clearContent = async (content) => {
+  content.forEach(async (item) => {
+    await deleteContent(item.id);
+  });
 };

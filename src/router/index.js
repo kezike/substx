@@ -18,19 +18,14 @@ const routes = [
   },
   {
     path: '/content/new',
-    name: 'Content',
+    name: 'NewContent',
     component: () => import('../components/Content.vue')
   },
-  // {
-  //   path: '/content/:id',
-  //   name: 'ViewContent',
-  //   component: Home
-  // },
-  // {
-  //   path: '/content/:id/edit',
-  //   name: 'EditContent',
-  //   component: Home
-  // },
+  {
+    path: '/content/:id',
+    name: 'ViewContent',
+    component: () => import('../components/Content.vue')
+  },
   // {
   //   path: '/content/:id/share',
   //   name: 'ShareContent',

@@ -43,7 +43,7 @@
 <script>
   import ContentConfig from './ContentConfig.vue';
   import ContentPreview from './ContentPreview.vue';
-  import { persistContent } from '../services/stacks';
+  import { persistContent, fetchContent } from '../services/stacks';
 
   export default {
     name: 'Content',
@@ -54,14 +54,17 @@
 
     methods: {
       cancel() {
+        this.$store.commit("saveContent", '');
         this.$router.go(-1);
       },
 
       async save() {
+        const editing = !this.$route.path.endsWith('new');
         const content = this.$store.getters.content;
+        const contentId = editing ? this.$route.params.id : null;
         const contentRecord = {
-          id: 'my-id',
-          date: 'my/da/te',
+          id: contentId,
+          date: new Date(),
           title: 'My title',
           content
         };

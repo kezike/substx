@@ -7,7 +7,7 @@ const store = createStore({
       // from Stacks authentication
       username: ''
     },
-    content: ''
+    content: { id: '', data: '' },
   },
 
   getters: {
@@ -16,14 +16,14 @@ const store = createStore({
     },
 
     content(state) {
-      return state.content;
+      return state.content.data;
     },
   },
 
   mutations: {
     saveContent(state, payload) {
-      state.content = payload;
-    }
+      state.content.data = payload;
+    },
   },
 
   actions: {}
