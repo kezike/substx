@@ -1,6 +1,30 @@
 <template>
-  <h1>New Content</h1>
+  <div v-if="editingTitle">
+    <input type="text" id="content-title" name="content-title" style="font-size:30px;display:inline;" v-model="title">&nbsp;&nbsp;
+    <span class="button create-content" @click="toggleEditTitle()">
+      <i class="bi bi-check2-square"></i>
+    </span>
+  </div>
+  <div v-if="!editingTitle">
+    <strong style="font-size: 30px;">{{title}}</strong>&nbsp;&nbsp;
+    <span class="button create-content" @click="toggleEditTitle()">
+      <i class="bi bi-pencil-square"></i>
+    </span>
+  </div>
   <center>
+    <table cellpadding="50">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;">
+            <ContentConfig />
+          </td>
+          <td></td>
+          <td style="vertical-align: top;">
+            <ContentPreview :content="content" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <table cellpadding="10">
       <tbody>
         <tr>
@@ -23,20 +47,6 @@
         </tr>
       </tbody>
     </table>
-      
-    <table cellpadding="50">
-        <tbody>
-          <tr>
-            <td style="vertical-align: top;">
-              <ContentConfig />
-            </td>
-            <td></td>
-            <td style="vertical-align: top;">
-              <ContentPreview :content="content" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
   </center>
 </template>
 
@@ -52,25 +62,51 @@
       ContentPreview
     },
 
+    async mounted() {
+      const editingContent = !this.$route.path.endsWith('new');
+      this.editingContent = editingContent;
+      if (this.editingContent) {
+        const contentId = this.$route.params.id;
+        const title = (await fetchContent(contentId)).title;
+        this.title = title;
+      } else {
+        this.title = "New Content";
+      }
+    },
+
+    unmounted() {
+      this.$store.commit("saveContent", '');
+    },
+
+    data() {
+      return {
+        title: '',
+        editingTitle: false,
+        editingContent: false,
+      };
+    },
+
     methods: {
-      cancel() {
-        this.$store.commit("saveContent", '');
-        this.$router.go(-1);
+      toggleEditTitle() {
+        this.editingTitle = !this.editingTitle;
       },
 
       async save() {
-        const editing = !this.$route.path.endsWith('new');
         const content = this.$store.getters.content;
-        const contentId = editing ? this.$route.params.id : null;
+        const contentId = this.editingContent ? this.$route.params.id : null;
         const contentRecord = {
           id: contentId,
           date: new Date(),
-          title: 'My title',
-          content
+          title: this.title,
+          content,
         };
         await persistContent(contentRecord);
         this.cancel();
-      }
+      },
+
+      cancel() {
+        this.$router.go(-1);
+      },
     },
 
     computed: {
