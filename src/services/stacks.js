@@ -107,3 +107,25 @@ export const clearContent = async (content) => {
     await deleteContent(item.id);
   });
 };
+
+// Process SQL-like query on data
+export const processQuery = (data, query) => {
+  switch (query.type) {
+    case 'ORDER_BY':
+      const field = query.field;
+      const direction = query.direction;
+      data.sort((a, b) => {
+        if (direction < 0) {
+          return b[field] - a[field];
+        }
+        return a[field] - b[field];
+      });
+  }
+};
+
+// Process multiple SQL-like queries on data
+export const processQueries = (data, queries=[]) => {
+  queries.forEach((q) => {
+    processQuery(data, q);
+  });
+};

@@ -11,7 +11,7 @@
             <td></td>
             <td></td>
             <td>
-              <h2>Hi {{ username }}</h2>
+              <h1>Hi {{ username }}</h1>
             </td>
             <td></td>
             <td></td>
@@ -117,6 +117,7 @@
     hasContent,
     listContent,
     clearContent,
+    processQuery,
   } from '../services/stacks';
 
   export default {
@@ -157,7 +158,15 @@
         const hasCont = await hasContent();
         this.hasContent = hasCont;
         if (hasCont) {
+          const query = {
+            type: 'ORDER_BY',
+            field: 'date',
+            direction: -1,
+          };
+          console.log("this.content:", this.content);
           await listContent(this.content);
+          console.log("this.content:", this.content);
+          processQuery(this.content, query);
         }
         this.isLoading = false;
       },
