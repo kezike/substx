@@ -101,7 +101,7 @@ export const deleteContent = async (slug) => {
   await storage.deleteFile(`substx/content/${slug}.json`);
 };
 
-// Delete user-generated data
+// Clear user-generated data
 export const clearContent = async (content) => {
   content.forEach(async (item) => {
     await deleteContent(item.id);
