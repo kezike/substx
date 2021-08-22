@@ -25,7 +25,7 @@
   .preview {
     border-style: solid;
     border-width: 2px;
-    height: 450px;
-    width: 450px;
+    min-height: 450px;
+    min-width: 450px;
   }
 </style>
