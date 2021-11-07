@@ -2,19 +2,21 @@
   <h2>Config</h2>
   <div>
     <tabs>
-      <tab name="Objects">
+      <tab name="Elements">
         <h3><b>Headers</b></h3>
-        <button @click="addHeader1()"><h1>Add Header 1</h1></button>
-        <button @click="addHeader2()"><h2>Add Header 2</h2></button>
-        <button @click="addHeader3()"><h3>Add Header 3</h3></button>
-        <button @click="addHeader4()"><h4>Add Header 4</h4></button>
-        <button @click="addHeader5()"><h5>Add Header 5</h5></button>
-        <button @click="addHeader6()"><h6>Add Header 6</h6></button>
+        <button @click="addHeader1()"><h1>Add Header 1</h1></button><br>
+        <button @click="addHeader2()"><h2>Add Header 2</h2></button><br>
+        <button @click="addHeader3()"><h3>Add Header 3</h3></button><br>
+        <button @click="addHeader4()"><h4>Add Header 4</h4></button><br>
+        <button @click="addHeader5()"><h5>Add Header 5</h5></button><br>
+        <button @click="addHeader6()"><h6>Add Header 6</h6></button><br>
         <h3><b>Paragraphs</b></h3>
         <button @click="addParagraph()">Add Paragraph</button>
         <h3><b>Lists</b></h3>
         <button @click="addBulletList()">Add Bullet List</button>
         <button @click="addNumberList()">Add Number List</button>
+        <h3><b>Images</b></h3>
+        <button @click="addImage()">Add Image</button>
       </tab>
       <tab name="Code">
         <textarea name="new-content-config" id="" cols="60" rows="30" v-model="content"></textarea>
@@ -25,6 +27,8 @@
 
 <script>
   import { fetchContent } from '../services/stacks';
+  import { html as beautify } from 'js-beautify';
+  import { v4 as uuidv4 } from 'uuid';
   import * as cheerio from 'cheerio';
 
   export default {
@@ -38,72 +42,108 @@
       // satisfy the cheerio.load method, which expects a truthy input value
       this.dom = cheerio.load(content || '<div>My Temp Div</div>');
       this.dom('div').remove();
+      this.setupStyleBlock();
     },
 
     data() {
       return {
         content: '',
         dom: null,
+        defaultOpts: {
+          id: null,
+          direction: 1
+        }
       };
     },
 
     methods: {
-      addNode(defaultText, id=null) {
-        if (id) {
-          this.dom(`#${id}`).after(defaultText);
+      beautify(domHtml) {
+        return beautify(domHtml, { indent_inner_html: true, indent_size: 2 });
+      },
+
+      setupStyleBlock() {
+        const styleBlock = `
+          <style>
+            .content-node:hover {
+              color: lightgray;
+              cursor: pointer;
+            }
+          </style>`;
+        this.dom('head').append(styleBlock);
+      },
+
+      addNode(defaultText, opts=this.defaultOpts) {
+        const nodeId = uuidv4();
+        const defaultNode = `
+          <div>
+            ${defaultText}
+          </div>`;
+        if (opts.sibId) {
+          this.dom(`#${opts.sibId}`).after(defaultNode);
+          const node = this.dom(`#${opts.sibId}`).next().children().first();
+          node.attr('id', nodeId);
         } else {
-          this.dom('body').append(defaultText);
+          this.dom('body').append(defaultNode);
+          const node = this.dom('body').children('div').last().children().first();
+          node.attr('id', nodeId);
+          node.addClass('content-node');
         }
-        this.content = this.dom.html();
+        this.dom('.content-node:hover').css('background-color','red');
+        this.content = this.beautify(this.dom.html());
       },
 
-      addHeader1(id=null) {
-        this.addNode('<h1>My Header 1</h1>', id);
+      addHeader1(opts=this.defaultOpts) {
+        this.addNode('<h1>My Header 1</h1>', opts);
       },
 
-      addHeader2(id=null) {
-        this.addNode('<h2>My Header 2</h2>', id);
+      addHeader2(opts=this.defaultOpts) {
+        this.addNode('<h2>My Header 2</h2>', opts);
       },
 
-      addHeader3(id=null) {
-        this.addNode('<h3>My Header 3</h3>', id);
+      addHeader3(opts=this.defaultOpts) {
+        this.addNode('<h3>My Header 3</h3>', opts);
       },
 
-      addHeader4(id=null) {
-        this.addNode('<h4>My Header 4</h4>', id);
+      addHeader4(opts=this.defaultOpts) {
+        this.addNode('<h4>My Header 4</h4>', opts);
       },
 
-      addHeader5(id=null) {
-        this.addNode('<h5>My Header 5</h5>', id);
+      addHeader5(opts=this.defaultOpts) {
+        this.addNode('<h5>My Header 5</h5>', opts);
       },
 
-      addHeader6(id=null) {
-        this.addNode('<h6>My Header 6</h6>', id);
+      addHeader6(opts=this.defaultOpts) {
+        this.addNode('<h6>My Header 6</h6>', opts);
       },
 
-      addParagraph(id=null) {
-        this.addNode('<p>My Paragraph</p>', id);
+      addParagraph(opts=this.defaultOpts) {
+        this.addNode('<p>My Paragraph</p>', opts);
       },
 
-      addBulletList(id=null) {
+      addBulletList(opts=this.defaultOpts) {
         const defaultBulletList = `
           <ul>
             <li>My Bullet Item 1</li>
             <li>My Bullet Item 2</li>
             <li>My Bullet Item 3</li>
           </ul>`;
-        this.addNode(defaultBulletList, id);
+        this.addNode(defaultBulletList, opts);
       },
 
-      addNumberList(id=null) {
+      addNumberList(opts=this.defaultOpts) {
         const defaultNumberList = `
           <ol>
             <li>My Number Item 1</li>
             <li>My Number Item 2</li>
             <li>My Number Item 3</li>
           </ol>`;
-        this.addNode(defaultNumberList, id);
+        this.addNode(defaultNumberList, opts);
       },
+
+      addImage(opts=this.defaultOpts) {
+        const defaultImage = '<img alt="My Image" src="https://picsum.photos/200" />';
+        this.addNode(defaultImage, opts);
+      }
     },
 
     watch: {
@@ -122,5 +162,18 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+  }
+
+  .control-node {
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    bottom: 50%;
+    left: 50%;
+    width: 300px;
+  }
+
+  .active {
+    background: green;
   }
 </style>

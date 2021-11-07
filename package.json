@@ -13,6 +13,7 @@
     "@stacks/storage": "^2.0.0-beta.1",
     "cheerio": "^1.0.0-rc.10",
     "core-js": "^3.15.2",
+    "js-beautify": "^1.14.0",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2",
     "vue": "^3.1.4",

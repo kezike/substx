@@ -1,13 +1,13 @@
 <template>
   <div v-if="editingTitle">
     <input type="text" id="content-title" name="content-title" style="font-size:30px;display:inline;" v-model="title">&nbsp;&nbsp;
-    <span class="button create-content" @click="toggleEditTitle">
+    <span class="button" @click="toggleEditTitle">
       <i class="bi bi-check2-square"></i>
     </span>
   </div>
   <div v-if="!editingTitle">
     <strong style="font-size: 30px;">{{title}}</strong>&nbsp;&nbsp;
-    <span class="button create-content" @click="toggleEditTitle">
+    <span class="button" @click="toggleEditTitle">
       <i class="bi bi-pencil-square"></i>
     </span>
   </div>
@@ -57,6 +57,7 @@
 
   export default {
     name: 'Content',
+
     components: {
       ContentConfig,
       ContentPreview

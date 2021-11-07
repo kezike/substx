@@ -111,7 +111,7 @@ export const clearContent = async (content) => {
 // Process SQL-like query on data
 export const processQuery = (data, query) => {
   switch (query.type) {
-    case 'ORDER_BY':
+    case 'ORDER_BY': {
       const field = query.field;
       const direction = query.direction;
       data.sort((a, b) => {
@@ -120,6 +120,8 @@ export const processQuery = (data, query) => {
         }
         return a[field] - b[field];
       });
+      break;
+    }
   }
 };
 
